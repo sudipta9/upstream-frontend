@@ -112,9 +112,9 @@ const SignUp = () => {
   return (
     <Form.Container backgroundImage="/images/misc/background.jpg">
       <Form
-        onSubmit={async (e) => {
-          await e.preventDefault();
-          await signupAction({
+        onSubmit={(e) => {
+          e.preventDefault();
+          signupAction({
             email: email,
             password: password,
             confirmPassword: confirmPassword,

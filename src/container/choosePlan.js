@@ -1,9 +1,9 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { ChoosePlan } from "../components";
 
 const ChoosePlanContainer = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   return (
     <ChoosePlan.Container>

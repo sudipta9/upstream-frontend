@@ -1,16 +1,28 @@
 import React from "react";
-import { Container, FormContent, Heading, SubmitButton } from "./styles/form";
+import {
+  Container,
+  ErrorMessage,
+  FormContent,
+  Heading,
+  SubmitButton,
+} from "./styles/form";
 
 const Form = ({ children, ...restProps }) => {
   return (
     <div className="container" style={{ paddingTop: "130px" }}>
       <div className="row">
         <div className="col-lg-12" style={{ textAlign: "center" }}>
-          <FormContent {...restProps} noValidate>{children}</FormContent>
+          <FormContent {...restProps} noValidate>
+            {children}
+          </FormContent>
         </div>
       </div>
     </div>
   );
+};
+
+Form.ErrorMessage = ({ children, ...restProps }) => {
+  return <ErrorMessage {...restProps}> {children} </ErrorMessage>;
 };
 
 Form.Container = ({ children, ...restProps }) => {

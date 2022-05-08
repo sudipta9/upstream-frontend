@@ -1,5 +1,9 @@
 import { darken, lighten } from "polished";
 import styled from "styled-components/macro";
+export const ErrorMessage = styled.p`
+  font-size: 1.2rem;
+  color: red;
+`;
 
 export const Container = styled.div`
   &:before {
@@ -85,9 +89,10 @@ export const SubmitButton = styled.button`
   outline: none;
   margin: 20px 0;
   color: #fff;
-  background: ${(props) => props.disabled ? lighten(0.3, "#0583d2" ) : "#0583d2" };
-  cursor: ${(props) => props.disabled ? "not-allowed" : "pointer"};
-  :hover{
-    background: ${props => !props.disabled && darken(0.1, "#0583d2")};
+  background: ${(props) =>
+    props.disabled ? lighten(0.3, "#0583d2") : "#0583d2"};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  :hover {
+    background: ${(props) => !props.disabled && darken(0.1, "#0583d2")};
   }
 `;

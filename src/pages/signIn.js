@@ -1,8 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Form, FormInput } from "../components";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  userSignIn,
+  userSelector,
+  clearState,
+  isUserAuthenticated,
+} from "../features/user/userSlice";
 
-const SignInContainer = () => {
+const SignIn = () => {
   const initialEmailRender = useRef(true);
   const [email, setEmail] = useState("");
   const [emailMessage, setEmailMessage] = useState("");
@@ -12,6 +19,14 @@ const SignInContainer = () => {
   const [password, setPassword] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(false);
+
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+  const { isFetching, isSuccess, isError, errorMessage, isAuthenticated } =
+    useSelector(userSelector);
 
   const validateEmail = (email) => {
     var validRegex =
@@ -67,10 +82,47 @@ const SignInContainer = () => {
     }
   }, [password]);
 
+  useEffect(() => {
+    const runsAtFirst = () => {
+      dispatch(clearState());
+      dispatch(isUserAuthenticated());
+      if (isAuthenticated) navigate("/home");
+    };
+    runsAtFirst();
+  }, [dispatch, isAuthenticated, navigate]);
+
+  useEffect(() => {
+    if (isError) {
+      console.log(errorMessage);
+      setErrorMsg(errorMessage);
+      dispatch(clearState());
+    }
+    if (isFetching) console.log("Wait");
+
+    if (isSuccess) {
+      dispatch(clearState());
+      navigate("/home");
+    }
+  }, [
+    isError,
+    isSuccess,
+    isFetching,
+    dispatch,
+    errorMessage,
+    navigate,
+    isAuthenticated,
+  ]);
+
   return (
     <Form.Container backgroundImage="/images/misc/background.jpg">
-      <Form>
+      <Form
+        onSubmit={(e) => {
+          e.preventDefault();
+          dispatch(userSignIn({ email, password }));
+        }}
+      >
         <Form.Heading>Sign In</Form.Heading>
+        {errorMsg && <Form.ErrorMessage>{errorMsg}</Form.ErrorMessage>}
         <FormInput.Container required>
           <FormInput.Label>Email Address</FormInput.Label>
           <FormInput
@@ -95,7 +147,12 @@ const SignInContainer = () => {
             <FormInput.Message>{passwordMessage}</FormInput.Message>
           )}
         </FormInput.Container>
-        <Form.SubmitButton type="submit">Sign In</Form.SubmitButton>
+        <Form.SubmitButton
+          type="submit"
+          disabled={isEmailValid && isPasswordValid ? false : true}
+        >
+          Sign In
+        </Form.SubmitButton>
         <Link to="/sign-up">Register</Link> |{" "}
         <Link to="/forgot-password">Forget Password?</Link>
       </Form>
@@ -103,4 +160,4 @@ const SignInContainer = () => {
   );
 };
 
-export default SignInContainer;
+export default SignIn;

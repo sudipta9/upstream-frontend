@@ -5,17 +5,17 @@ import "normalize.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import GlobalStyles from "./global-styles";
 import { BrowserRouter } from "react-router-dom";
-// import store from "./store/reducerConfig";
-// import { Provider } from "react-redux";
+import { Provider } from "react-redux";
+import store from "./app/store";
 
 const root = ReactDOMclient.createRoot(document.getElementById("root"));
 root.render(
   <>
     <GlobalStyles />
     <BrowserRouter>
-      {/* <Provider store={store}> */}
-      <App />
-      {/* </Provider> */}
+      <Provider store={store}>
+        <App />
+      </Provider>
     </BrowserRouter>
   </>
 );

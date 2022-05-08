@@ -1,6 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, FormInput } from "../components";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  userSignUp,
+  userSelector,
+  clearState,
+  isUserAuthenticated,
+} from "../features/user/userSlice";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -19,8 +26,11 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordMessage, setConfirmPasswordMessage] = useState("");
   const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const [disabled, setDisabled] = useState(true);
+  const dispatch = useDispatch();
+  const { isFetching, isSuccess, isError, errorMessage, isAuthenticated } =
+    useSelector(userSelector);
 
   const validateEmail = (email) => {
     var validRegex =
@@ -100,29 +110,39 @@ const SignUp = () => {
   }, [confirmPassword, password]);
 
   useEffect(() => {
-    isEmailValid && isPasswordValid && isConfirmPasswordValid
-      ? setDisabled(false)
-      : setDisabled(true);
-  }, [isConfirmPasswordValid, isEmailValid, isPasswordValid]);
+    const runsAtFirst = () => {
+      dispatch(clearState());
+      dispatch(isUserAuthenticated());
+      if (isAuthenticated) navigate("/home");
+    };
+    runsAtFirst();
+  }, [dispatch, isAuthenticated, navigate]);
 
-  const signupAction = async (data) => {
-    const res = await fetch("http://localhost:80");
-    console.log(res);
-  };
+  useEffect(() => {
+    if (isError) {
+      // console.log(errorMessage);
+      setErrorMsg(errorMessage);
+      dispatch(clearState());
+    }
+    if (isFetching) console.log("Wait");
+
+    if (isSuccess) {
+      dispatch(clearState());
+      // console.log("success");
+      navigate("/sign-in");
+    }
+  }, [dispatch, errorMessage, isError, isFetching, isSuccess, navigate]);
+
   return (
     <Form.Container backgroundImage="/images/misc/background.jpg">
       <Form
         onSubmit={(e) => {
           e.preventDefault();
-          signupAction({
-            email: email,
-            password: password,
-            confirmPassword: confirmPassword,
-          });
-          navigate("./choose-plan");
+          dispatch(userSignUp({ email, password }));
         }}
       >
         <Form.Heading>Sign Up</Form.Heading>
+        {errorMsg && <Form.ErrorMessage>{errorMsg}</Form.ErrorMessage>}
         <FormInput.Container required>
           <FormInput.Label>Email Address</FormInput.Label>
           <FormInput
@@ -156,7 +176,14 @@ const SignUp = () => {
             <FormInput.Message>{confirmPasswordMessage}</FormInput.Message>
           )}
         </FormInput.Container>
-        <Form.SubmitButton type="submit" disabled={disabled}>
+        <Form.SubmitButton
+          type="submit"
+          disabled={
+            isEmailValid && isPasswordValid && isConfirmPasswordValid
+              ? false
+              : true
+          }
+        >
           Register
         </Form.SubmitButton>
         Already have an account? <Link to="/sign-in">Login Here</Link>

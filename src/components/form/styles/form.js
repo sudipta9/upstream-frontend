@@ -1,7 +1,7 @@
 import { darken, lighten } from "polished";
 import styled from "styled-components/macro";
 export const ErrorMessage = styled.p`
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: red;
 `;
 
@@ -78,6 +78,11 @@ export const Heading = styled.h1`
     height: 3px;
     background-color: #0583d2;
   }
+`;
+
+export const Text = styled.p`
+  font-size: 1.2rem;
+  font-weight: 400;
 `;
 
 export const SubmitButton = styled.button`

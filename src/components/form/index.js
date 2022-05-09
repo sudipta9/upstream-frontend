@@ -5,6 +5,7 @@ import {
   FormContent,
   Heading,
   SubmitButton,
+  Text,
 } from "./styles/form";
 
 const Form = ({ children, ...restProps }) => {
@@ -35,6 +36,10 @@ Form.Container = ({ children, ...restProps }) => {
 
 Form.Heading = ({ children, ...restProps }) => {
   return <Heading {...restProps}>{children}</Heading>;
+};
+
+Form.Text = ({ children, ...restProps }) => {
+  return <Text {...restProps}>{children}</Text>;
 };
 
 Form.SubmitButton = ({ children, ...restProps }) => {

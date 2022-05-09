@@ -84,9 +84,8 @@ const SignIn = () => {
 
   useEffect(() => {
     const runsAtFirst = () => {
-      dispatch(clearState());
       dispatch(isUserAuthenticated());
-      if (isAuthenticated) navigate("/home");
+      if (isAuthenticated) navigate("/");
     };
     runsAtFirst();
   }, [dispatch, isAuthenticated, navigate]);
@@ -101,7 +100,7 @@ const SignIn = () => {
 
     if (isSuccess) {
       dispatch(clearState());
-      navigate("/home");
+      navigate("/");
     }
   }, [
     isError,
@@ -154,7 +153,7 @@ const SignIn = () => {
           Sign In
         </Form.SubmitButton>
         <Link to="/sign-up">Register</Link> |{" "}
-        <Link to="/forgot-password">Forget Password?</Link>
+        <Link to="/forget-password">Forget Password?</Link>
       </Form>
     </Form.Container>
   );

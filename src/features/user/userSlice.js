@@ -17,7 +17,7 @@ export const userSignIn = createAsyncThunk(
       if (response.status === 200) {
         // localStorage.setItem(token)
         // console.log(response.data);
-        return response.data;
+        return thunkAPI.fulfillWithValue(response.data);
       } else return thunkAPI.rejectWithValue(response.data);
     } catch (err) {
       console.clear();
@@ -74,6 +74,76 @@ export const isUserAuthenticated = createAsyncThunk(
   }
 );
 
+export const forgetPassword = createAsyncThunk(
+  "user/forget-password",
+  async ({ email, domain }, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        `${
+          process.env.SERVER_URI
+            ? process.env.SERVER_URI
+            : "http://127.0.0.1:5000"
+        }/user/forget-password`,
+        {
+          email: email,
+          domain: domain,
+        }
+      );
+      if (response.status === 200)
+        return thunkAPI.fulfillWithValue(response.data);
+      else return thunkAPI.rejectWithValue(response.data);
+    } catch (err) {
+      // console.log(err.response.data);
+      return thunkAPI.rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const checkResetPasswordToken = createAsyncThunk(
+  "user/check-reset-password-token",
+  async ({ token }, thunkAPI) => {
+    try {
+      const response = await axios.get(
+        `${
+          process.env.SERVER_URI
+            ? process.env.SERVER_URI
+            : "http://127.0.0.1:5000"
+        }/user/check-reset-password-token`,
+        { params: { token: token } }
+      );
+      if (response.status === 200) {
+        return thunkAPI.fulfillWithValue(true);
+      } else return thunkAPI.rejectWithValue(response.data);
+    } catch (err) {
+      console.clear();
+      return thunkAPI.rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const resetPassword = createAsyncThunk(
+  "user/reset-password",
+  async ({ token, password }, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        `${
+          process.env.SERVER_URI
+            ? process.env.SERVER_URI
+            : "http://127.0.0.1:5000"
+        }/user/reset-password`,
+        { password: password },
+        { params: { token: token } }
+      );
+      if (response.status === 201)
+        return thunkAPI.fulfillWithValue(response.data);
+      else return thunkAPI.rejectWithValue(response.data);
+    } catch (err) {
+      console.log(err.response);
+      return thunkAPI.rejectWithValue(err.response.data);
+    }
+  }
+);
+
 export const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -84,12 +154,15 @@ export const userSlice = createSlice({
     isError: false,
     errorMessage: "",
     isAuthenticated: false,
+    doneForgetPasswordMsg: "",
+    passwordChangeMsg: "",
   },
   reducers: {
     clearState: (state) => {
       state.isError = false;
       state.isSuccess = false;
       state.isFetching = false;
+      state.errorMessage = "";
       return state;
     },
   },
@@ -131,6 +204,44 @@ export const userSlice = createSlice({
       state.isFetching = true;
     },
     [isUserAuthenticated.rejected]: (state, { payload }) => {
+      state.isError = true;
+      state.errorMessage = payload.msg;
+    },
+    [forgetPassword.fulfilled]: (state, { payload }) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+      state.doneForgetPasswordMsg = payload.msg;
+    },
+    [forgetPassword.pending]: (state) => {
+      state.isFetching = true;
+    },
+    [forgetPassword.rejected]: (state, { payload }) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.errorMessage = payload.msg;
+    },
+    [checkResetPasswordToken.fulfilled]: (state, { payload }) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+    },
+    [checkResetPasswordToken.pending]: (state) => {
+      state.isFetching = true;
+    },
+    [checkResetPasswordToken.rejected]: (state, { payload }) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.errorMessage = payload.msg;
+    },
+    [resetPassword.fulfilled]: (state, { payload }) => {
+      state.isFetching = false;
+      state.isSuccess = true;
+      state.passwordChangeMsg = payload.msg;
+    },
+    [resetPassword.pending]: (state) => {
+      state.isFetching = true;
+    },
+    [resetPassword.rejected]: (state, { payload }) => {
+      state.isFetching = false;
       state.isError = true;
       state.errorMessage = payload.msg;
     },

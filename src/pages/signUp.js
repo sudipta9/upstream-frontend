@@ -113,7 +113,7 @@ const SignUp = () => {
     const runsAtFirst = () => {
       dispatch(clearState());
       dispatch(isUserAuthenticated());
-      if (isAuthenticated) navigate("/home");
+      if (isAuthenticated) navigate("/");
     };
     runsAtFirst();
   }, [dispatch, isAuthenticated, navigate]);

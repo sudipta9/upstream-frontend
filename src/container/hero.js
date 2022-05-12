@@ -9,7 +9,7 @@ const HeroContainer = () => {
       <Hero.BackGround />
       <Hero.Content>
         <Hero.Title>Unlimited movies, TV shows and more.</Hero.Title>
-        <Hero.SubTitle>Watch anywhere. Cancel anytime.</Hero.SubTitle>
+        <Hero.SubTitle>Watch anywhere & anytime</Hero.SubTitle>
         <Hero.SignUpForm onSubmit={() => console.log("Submitting")}>
           <Hero.SignUpFormTitle>
             Ready to watch? Enter your email to create or restart your

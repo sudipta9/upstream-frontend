@@ -1,23 +1,23 @@
 [
   {
     "id": 1,
-    "title": "Enjoy on your TV.",
-    "subTitle": "Watch on smart TVs, PlayStation, Xbox, Chromecast, Apple TV, Blu-ray players and more.",
-    "image": "/images/misc/tv.png",
-    "alt": "Watch on your TV",
+    "title": "Easy on your Pocket",
+    "subTitle": "Price is what you pay. Value is what you get. Watch your favorite shows at a lower cost.",
+    "image": "/images/misc/price.png",
+    "alt": "Easy on your Pocket",
     "direction": "row"
   },
   {
     "id": 2,
-    "title": "Download your programmes to watch on the go.",
-    "subTitle": "Save your data and watch all your favorites offline.",
-    "image": "/images/misc/mobile.jpg",
+    "title": "Watch your favorite shows without Buffering",
+    "subTitle": "You have access to the fastest servers across india which provides you a buffer-free streaming experience",
+    "image": "/images/misc/buffering.png",
     "alt": "Watch on mobile",
     "direction": "row-reverse"
   },
   {
     "id": 3,
-    "title": "Watch everywhere.",
+    "title": "Watch everywhere on any Device.",
     "subTitle": "Stream unlimited films and TV programmes on your phone, tablet, laptop and TV without paying more.",
     "image": "/images/misc/devices.png",
     "alt": "Watch everywhere",
@@ -25,9 +25,9 @@
   },
   {
     "id": 4,
-    "title": "Create profiles for children.",
-    "subTitle": "Send children on adventures with their favourite characters in a space made just for them—free with your membership.",
-    "image": "/images/misc/kids.png",
+    "title": "We value your Privacy and Security",
+    "subTitle": "Security used to be an inconvenience sometimes, but now it's a necessity all the time with us.",
+    "image": "/images/misc/secure.png",
     "alt": "Children Profile",
     "direction": "row-reverse"
   }

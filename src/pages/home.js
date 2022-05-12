@@ -1,23 +1,53 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
-  clearState,
-  isUserAuthenticated,
-  userSelector,
-} from "../features/user/userSlice";
-
-const Intro = React.lazy(() => import("./intro"));
+  clearGetSubscriptionState,
+  getSubscription,
+  subscriptionSelector,
+} from "../features/subscriptions/subscriptionSlice";
+import isUserAuthenticated from "../helper/userAuthentication";
 
 const Home = () => {
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector(userSelector);
+  const {
+    isGetSubscriptionFetching,
+    isGetSubscriptionRejected,
+    isGetSubscriptionSuccess,
+    isSubscribed,
+  } = useSelector(subscriptionSelector);
 
   useEffect(() => {
-    dispatch(clearState());
-    dispatch(isUserAuthenticated());
-  }, [dispatch]);
+    if (!isUserAuthenticated()) navigate("/sign-in");
+    else {
+      // dispatch(clearGetSubscriptionState());
+      dispatch(getSubscription());
+    }
+  }, [dispatch, navigate]);
 
-  return <>{isAuthenticated ? <>Home</> : <Intro />}</>;
+  useEffect(() => {
+    if (isGetSubscriptionFetching) {
+      console.log("getting current user subscription");
+    }
+    if (isGetSubscriptionRejected) {
+      dispatch(clearGetSubscriptionState());
+    }
+    if (isGetSubscriptionSuccess) {
+      if (isSubscribed) navigate("/");
+      if (!isSubscribed) navigate("/choose-plan");
+    }
+  }, [
+    dispatch,
+    isGetSubscriptionFetching,
+    isGetSubscriptionRejected,
+    isGetSubscriptionSuccess,
+    isSubscribed,
+    navigate,
+  ]);
+
+  return <div>Home</div>;
 };
 
 export default Home;

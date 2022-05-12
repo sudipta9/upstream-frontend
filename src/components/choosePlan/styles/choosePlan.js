@@ -72,12 +72,13 @@ export const CardContainer = styled.div`
 `;
 
 export const CardDetails = styled.ul`
-  margin: 2.6rem;
+  margin: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   padding: 0;
+  text-align: center;
 `;
 
 export const Feature = styled.li`
@@ -86,6 +87,7 @@ export const Feature = styled.li`
   width: 100%;
   justify-content: center;
   padding: 0.8rem 0;
+  text-transform: capitalize;
   &:first-child {
     /* padding-top: 0; */
     font-size: 1.5rem;

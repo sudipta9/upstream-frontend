@@ -1,49 +1,43 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { ChoosePlan } from "../components";
+import { useSelector, useDispatch } from "react-redux";
 import {
-  paymentSelector,
-  clearPaymentHandlerState,
-  clearPaymentVerifyState,
-  paymentHandler,
-  verifyPayment,
-} from "../features/payments/paymentSlice";
-import {
-  planClearState,
+  clearState as planClearState,
   getPlans,
   plansSelector,
 } from "../features/plans/planSlice";
 
+import {
+  clearState as clearPaymentState,
+  handlePayment,
+  verifyPayment,
+  paymentSelector,
+} from "../features/payments/paymentSlice.temp";
+
 const ChoosePlanContainer = () => {
   const dispatch = useDispatch();
-
   const {
-    isPlanFetching,
-    isPlanSuccess,
-    isPlanError,
-    planErrorMessage,
+    isFetching: isPlanFetching,
+    isSuccess: isPlanSuccess,
+    isError: isPlanError,
+    errorMessage: planErrorMessage,
     plans,
   } = useSelector(plansSelector);
 
   const {
     isPaymentFetching,
-    isPaymentFailed,
-    isPaymentSucceed,
+    isPaymentError,
+    isPaymentSuccess,
     paymentErrorMessage,
     paymentSuccessMessage,
     isVerifyPaymentFetching,
-    isVerifyPaymentFailed,
-    isVerifyPaymentSucceed,
+    isVerifyPaymentError,
+    isVerifyPaymentSuccess,
     verifyPaymentErrorMessage,
     verifyPaymentSuccessMessage,
   } = useSelector(paymentSelector);
 
   const [allPlans, setAllPlans] = useState([]);
-  const [planId, setPlanId] = useState("");
-  const navigate = useNavigate();
-
-  //  control plans fetching state
   useEffect(() => {
     if (isPlanFetching) console.log("Wait");
     if (isPlanError) {
@@ -63,14 +57,16 @@ const ChoosePlanContainer = () => {
     plans,
   ]);
 
-  // fetch all available plans from the server
   useEffect(() => {
     dispatch(planClearState());
     dispatch(getPlans());
   }, [dispatch]);
 
+  const [planId, setPlanId] = useState();
+  // const [orderId, setOrderId] = useState("")
+
   useEffect(() => {
-    const initPayment = (data, planId) => {
+    const initPayment = (data) => {
       const { amount, currency, id } = data;
       const options = {
         key: "rzp_test_hgXRPubo2sbxn4",
@@ -78,58 +74,49 @@ const ChoosePlanContainer = () => {
         currency,
         order_id: id,
         handler: (response) => {
-          const { razorpay_order_id } = response;
+          const { razorpay_payment_id } = response;
           try {
-            dispatch(verifyPayment({ orderId: razorpay_order_id, planId }));
+            dispatch(verifyPayment({ paymentId: razorpay_payment_id }));
           } catch (error) {
             console.log(error);
           }
         },
       };
-      console.log(options);
       const rzp = new window.Razorpay(options);
       rzp.open();
     };
-    if (isPaymentFetching) {
-      console.log("Payment Processing");
-    }
-    if (isPaymentFailed) {
+
+    if (isPaymentFetching) console.log("wait");
+    if (isPaymentError) {
       console.log(paymentErrorMessage);
-      dispatch(clearPaymentHandlerState());
+      dispatch(clearPaymentState());
     }
-    if (isPaymentSucceed) {
-      initPayment(paymentSuccessMessage, planId);
-      dispatch(clearPaymentHandlerState());
+    if (isPaymentSuccess) {
+      initPayment(paymentSuccessMessage);
     }
   }, [
     dispatch,
-    isPaymentFailed,
+    isPaymentError,
     isPaymentFetching,
-    isPaymentSucceed,
+    isPaymentSuccess,
     paymentErrorMessage,
     paymentSuccessMessage,
-    planId,
   ]);
 
   useEffect(() => {
-    if (isVerifyPaymentFetching) {
-      console.log("Verifying Payment status");
-    }
-    if (isVerifyPaymentFailed) {
+    if (isVerifyPaymentFetching) console.log("verifying payment");
+    if (isVerifyPaymentError) {
       console.log(verifyPaymentErrorMessage);
-      dispatch(clearPaymentVerifyState());
+      dispatch(clearPaymentState());
     }
-    if (isVerifyPaymentSucceed) {
-      // console.log(verifyPaymentSuccessMessage);
-      navigate("/");
-      dispatch(clearPaymentVerifyState());
+    if (isVerifyPaymentSuccess) {
+      dispatch(clearPaymentState());
     }
   }, [
     dispatch,
-    isVerifyPaymentFailed,
+    isVerifyPaymentError,
     isVerifyPaymentFetching,
-    isVerifyPaymentSucceed,
-    navigate,
+    isVerifyPaymentSuccess,
     verifyPaymentErrorMessage,
     verifyPaymentSuccessMessage,
   ]);
@@ -159,7 +146,9 @@ const ChoosePlanContainer = () => {
                     onClick={(e) => {
                       e.preventDefault();
                       setPlanId(plan._id);
-                      dispatch(paymentHandler({ planId: plan._id }));
+                      console.log(planId);
+                      dispatch(clearPaymentState());
+                      dispatch(handlePayment(plan._id));
                     }}
                   >
                     Choose Plan

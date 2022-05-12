@@ -105,7 +105,7 @@ const ForgetPassword = () => {
               type="submit"
               disabled={isEmailValid ? false : true}
             >
-              Sign In
+              Forget Password
             </Form.SubmitButton>
             Want to sign in? <Link to="/sign-in">click here</Link>
           </>

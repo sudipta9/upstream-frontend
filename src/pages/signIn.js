@@ -6,8 +6,8 @@ import {
   userSignIn,
   userSelector,
   clearState,
-  isUserAuthenticated,
 } from "../features/user/userSlice";
+import isUserAuthenticated from "../helper/userAuthentication";
 
 const SignIn = () => {
   const initialEmailRender = useRef(true);
@@ -83,12 +83,8 @@ const SignIn = () => {
   }, [password]);
 
   useEffect(() => {
-    const runsAtFirst = () => {
-      dispatch(isUserAuthenticated());
-      if (isAuthenticated) navigate("/");
-    };
-    runsAtFirst();
-  }, [dispatch, isAuthenticated, navigate]);
+    if (isUserAuthenticated()) navigate("/");
+  }, [navigate]);
 
   useEffect(() => {
     if (isError) {
@@ -97,9 +93,7 @@ const SignIn = () => {
       dispatch(clearState());
     }
     if (isFetching) console.log("Wait");
-
     if (isSuccess) {
-      dispatch(clearState());
       navigate("/");
     }
   }, [

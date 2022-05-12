@@ -41,7 +41,8 @@ export const userSignUp = createAsyncThunk(
             ? process.env.SERVER_URI
             : "http://127.0.0.1:5000"
         }/user/sign-up`,
-        { email, password }
+        { email, password },
+        { withCredentials: true }
       );
       if (response.status === 201) return response.data;
       else return thunkAPI.rejectWithValue(response.data);

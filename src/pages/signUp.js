@@ -6,8 +6,8 @@ import {
   userSignUp,
   userSelector,
   clearState,
-  isUserAuthenticated,
 } from "../features/user/userSlice";
+import isUserAuthenticated from "../helper/userAuthentication";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ const SignUp = () => {
   const [errorMsg, setErrorMsg] = useState("");
 
   const dispatch = useDispatch();
-  const { isFetching, isSuccess, isError, errorMessage, isAuthenticated } =
+  const { isFetching, isSuccess, isError, errorMessage } =
     useSelector(userSelector);
 
   const validateEmail = (email) => {
@@ -110,13 +110,8 @@ const SignUp = () => {
   }, [confirmPassword, password]);
 
   useEffect(() => {
-    const runsAtFirst = () => {
-      dispatch(clearState());
-      dispatch(isUserAuthenticated());
-      if (isAuthenticated) navigate("/");
-    };
-    runsAtFirst();
-  }, [dispatch, isAuthenticated, navigate]);
+    if (isUserAuthenticated()) navigate("/");
+  }, [navigate]);
 
   useEffect(() => {
     if (isError) {
@@ -127,9 +122,9 @@ const SignUp = () => {
     if (isFetching) console.log("Wait");
 
     if (isSuccess) {
-      dispatch(clearState());
+      // dispatch(clearState());
       // console.log("success");
-      navigate("/sign-in");
+      navigate("/choose-plan");
     }
   }, [dispatch, errorMessage, isError, isFetching, isSuccess, navigate]);
 

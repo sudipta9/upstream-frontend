@@ -17,7 +17,7 @@ const items = [
   "Contact Us",
   "Speed Test",
   "Legal Notices",
-  "Only on Netflix",
+  "Only on Upstream",
 ];
 
 const FooterContainer = () => {

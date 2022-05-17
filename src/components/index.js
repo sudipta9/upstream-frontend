@@ -6,3 +6,8 @@ export { default as HomeHeader } from "./homeHeader";
 export { default as FormInput } from "./formInput";
 export { default as Form } from "./form";
 export { default as ChoosePlan } from "./choosePlan";
+export { default as Navigation } from "./navigation";
+export { default as Movies } from "./movies";
+export { default as Movie } from "./movie";
+export { default as Player } from "./player";
+export { default as WatchDescription } from "./watchDescription";

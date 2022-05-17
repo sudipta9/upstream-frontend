@@ -1,17 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, FormInput } from "../components";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  userSignUp,
-  userSelector,
+  creatorSignIn,
+  creatorSelector,
   clearState,
-} from "../features/user/userSlice";
+} from "../features/creators/creatorsSlice";
 import isUserAuthenticated from "../helper/userAuthentication";
 
-const SignUp = () => {
-  const navigate = useNavigate();
-
+const CreatorSignIn = () => {
   const initialEmailRender = useRef(true);
   const [email, setEmail] = useState("");
   const [emailMessage, setEmailMessage] = useState("");
@@ -22,15 +20,13 @@ const SignUp = () => {
   const [passwordMessage, setPasswordMessage] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(false);
 
-  const initialConfirmPasswordRender = useRef(true);
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [confirmPasswordMessage, setConfirmPasswordMessage] = useState("");
-  const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
-  const { isFetching, isSuccess, isError, errorMessage } =
-    useSelector(userSelector);
+  const { isFetching, isSuccess, isError, errorMessage, role } =
+    useSelector(creatorSelector);
 
   const validateEmail = (email) => {
     var validRegex =
@@ -67,8 +63,7 @@ const SignUp = () => {
   // check password
   useEffect(() => {
     //* Prevent checking form initial loading
-    if (initialConfirmPasswordRender.current)
-      initialConfirmPasswordRender.current = false;
+    if (initialPasswordRender.current) initialPasswordRender.current = false;
     //* start checking form when value changed
     else {
       const validate = setTimeout(() => {
@@ -87,57 +82,38 @@ const SignUp = () => {
     }
   }, [password]);
 
-  // check confirm password
   useEffect(() => {
-    //* Prevent checking form initial loading
-    if (initialPasswordRender.current) initialPasswordRender.current = false;
-    //* start checking form when value changed
-    else {
-      const validate = setTimeout(() => {
-        if (password !== confirmPassword) {
-          setIsConfirmPasswordValid(false);
-          setConfirmPasswordMessage("Password does not match");
-        } else {
-          setIsConfirmPasswordValid(true);
-          setConfirmPasswordMessage("");
-        }
-      }, 1000);
-
-      return () => {
-        clearTimeout(validate);
-      };
-    }
-  }, [confirmPassword, password]);
-
-  useEffect(() => {
-    if (isUserAuthenticated()) navigate("/");
+    if (isUserAuthenticated()) navigate("/creator");
   }, [navigate]);
 
   useEffect(() => {
     if (isError) {
+      console.log(errorMessage);
       setErrorMsg(errorMessage);
       dispatch(clearState());
     }
     if (isFetching) console.log("Wait");
     if (isSuccess) {
-      navigate("/choose-plan");
+      if (role === "creator") navigate("/creator");
+      else setErrorMsg("This is not an Creator account");
     }
-  }, [dispatch, errorMessage, isError, isFetching, isSuccess, navigate]);
+  }, [isError, isSuccess, isFetching, dispatch, errorMessage, navigate, role]);
 
   return (
     <Form.Container backgroundImage="/images/misc/background.jpg">
       <Form
         onSubmit={(e) => {
           e.preventDefault();
-          dispatch(userSignUp({ email, password }));
+          dispatch(creatorSignIn({ email, password }));
         }}
       >
-        <Form.Heading>Sign Up</Form.Heading>
+        <Form.Heading>Creator Sign In</Form.Heading>
         {errorMsg && <Form.ErrorMessage>{errorMsg}</Form.ErrorMessage>}
         <FormInput.Container required>
           <FormInput.Label>Email Address</FormInput.Label>
           <FormInput
             type="email"
+            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -149,6 +125,7 @@ const SignUp = () => {
           <FormInput.Label>Password</FormInput.Label>
           <FormInput
             type="password"
+            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -156,31 +133,16 @@ const SignUp = () => {
             <FormInput.Message>{passwordMessage}</FormInput.Message>
           )}
         </FormInput.Container>
-        <FormInput.Container required>
-          <FormInput.Label>Repeat Password</FormInput.Label>
-          <FormInput
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-          {!isConfirmPasswordValid && (
-            <FormInput.Message>{confirmPasswordMessage}</FormInput.Message>
-          )}
-        </FormInput.Container>
         <Form.SubmitButton
           type="submit"
-          disabled={
-            isEmailValid && isPasswordValid && isConfirmPasswordValid
-              ? false
-              : true
-          }
+          disabled={isEmailValid && isPasswordValid ? false : true}
         >
-          Register
+          Sign In
         </Form.SubmitButton>
-        Already have an account? <Link to="/sign-in">Login Here</Link>
+        <Link to="/creator/forget-password">Forget Password?</Link>
       </Form>
     </Form.Container>
   );
 };
 
-export default SignUp;
+export default CreatorSignIn;

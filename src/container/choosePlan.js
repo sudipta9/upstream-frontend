@@ -99,7 +99,7 @@ const ChoosePlanContainer = () => {
     }
     if (isPaymentSucceed) {
       initPayment(paymentSuccessMessage, planId);
-      dispatch(clearPaymentHandlerState());
+      // dispatch(clearPaymentHandlerState());
     }
   }, [
     dispatch,
@@ -122,7 +122,7 @@ const ChoosePlanContainer = () => {
     if (isVerifyPaymentSucceed) {
       // console.log(verifyPaymentSuccessMessage);
       navigate("/");
-      dispatch(clearPaymentVerifyState());
+      // dispatch(clearPaymentVerifyState());
     }
   }, [
     dispatch,

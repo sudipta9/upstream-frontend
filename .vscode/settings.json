@@ -3,9 +3,12 @@
     "*.js": "javascriptreact"
   },
   "cSpell.words": [
+    "formdata",
     "Pubo",
     "Razorpay",
     "reduxjs",
-    "sbxn"
+    "sbxn",
+    "toastify",
+    "videojs"
   ]
 }

@@ -1,8 +1,12 @@
 import React from "react";
-import { Container, Input, Label, Message } from "./styles/formInput";
+import { Container, Input, Label, Message, Textarea } from "./styles/formInput";
 
-const FormInput = ({value, ...restProps }) => {
-  return <Input {...restProps} value={value}/>;
+const FormInput = ({ value, ...restProps }) => {
+  return <Input {...restProps} value={value} />;
+};
+
+FormInput.Textarea = ({ children, ...restProps }) => {
+  return <Textarea {...restProps}>{children}</Textarea>;
 };
 
 FormInput.Container = ({ children, ...restProps }) => {

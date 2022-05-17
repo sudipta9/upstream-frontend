@@ -43,7 +43,7 @@ export const verifyPayment = createAsyncThunk(
         { withCredentials: true }
       );
       if (response.status === 200) {
-        // console.log(response.data);
+        console.log(response.data);
         return thunkAPI.fulfillWithValue(response.data);
       } else {
         // console.log(response);

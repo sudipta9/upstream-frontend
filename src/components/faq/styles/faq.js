@@ -46,7 +46,7 @@ ListItem.Question = styled.button`
   width: 100%;
   border: 0;
   text-align: left;
-  background: #303030;
+  background: #182031;
   color: #fff;
   margin-bottom: 1px;
   svg {
@@ -72,6 +72,6 @@ ListItem.Answer = styled.div`
   overflow: hidden;
   max-height: 1200px;
   padding: 1.2em;
-  background: #303030;
+  background: #182031;
   transition: display 0.25s ease-in-out;
 `;
